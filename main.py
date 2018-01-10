@@ -27,9 +27,11 @@ def validate_form():
     if username == '':
         username_error = un_error
     if len(username) > 20 or len(username) < 3:
-        username = un_error
+        username = ''
+        username_error = un_error
     for i in username:
         if i == " ":
+            username = ''
             username_error = un_error
 
     if password == '':
@@ -42,22 +44,27 @@ def validate_form():
             password = ''
             password_error = pw_error
 
-    if verify != password:
+    if verify != password or verify == '':
         password = ''
         verify = ''
         verify_error = v_error
-
-    if len(email) > 20 or len(email) < 3:
-        email_error = e_error
-    for i in email:
-        if i == " ":
-           email_error = e_error
-    at_number = email.count("@")
-    dot_number = email.count(".")
-    if at_number != 1 or dot_number != 1:
-        email_error = e_error
+    
     if email == '':
         email_error = ''
+    else:
+        if len(email) > 20 or len(email) < 3:
+            email = ''
+            email_error = e_error
+        for i in email:
+            if i == " ":
+                email = ''
+                email_error = e_error
+            at_number = email.count("@")
+            dot_number = email.count(".")
+            if at_number != 1 or dot_number != 1:
+                email = ''
+                email_error = e_error
+        
 
     if not username_error and not password_error and not verify_error and not email_error:
         return "Welcome! " + username
