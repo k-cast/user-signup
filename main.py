@@ -1,61 +1,15 @@
-from flask import Flask, request
+from flask import Flask, request, redirect, render_template
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-form = """
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <style>
-            .error {{color: red;}}
-        </style>
-    </head>
-    <body>
-    <h1>Signup</h1>
-        <form action="/" method="post">
-            <table>
-                <tr>
-                    <td><label for="username">Username</label></td>
-                    <td>
-                        <input name="username" type="text" value="">
-                        <span class="error">{username_error}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="password">Password</label></td>
-                    <td>
-                        <input name="password" type="password">
-                        <span class="error">{password_error}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="verify">Verify Password</label></td>
-                    <td>
-                        <input name="verify" type="password">
-                        <span class="error">{verify_error}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="email">Email (optional)</label></td>
-                    <td>
-                        <input name="email" value="">
-                        <span class="error">{email_error}</span>
-                    </td>
-                </tr>
-            </table>
-            <input type="submit">
-        </form>
-    </body>
-</html>
-"""
+form = ''
 
 @app.route('/')
 def display_user_signup_form():
-    return form.format(username_error='', password_error='', verify_error='', email_error='')
+    return render_template('form.html', title = "Signup", username_error='', password_error='', verify_error='', email_error='')
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', 'GET'])
 def validate_form():
     username = request.form['username']
     password = request.form['password']
@@ -108,7 +62,7 @@ def validate_form():
     if not username_error and not password_error and not verify_error and not email_error:
         return "Welcome! " + username
     else:
-        return form.format(username_error=username_error, password_error=password_error, 
+        return render_template('form.html', title = 'Signup', username_error=username_error, password_error=password_error, 
             verify_error=verify_error, email_error=email_error, username=username, 
             password=password, verify=verify, email=email)   
 
